@@ -6,18 +6,6 @@ const input = parseInput<string>({
   },
 });
 
-const numberStrings = [
-  "one",
-  "two",
-  "three",
-  "four",
-  "five",
-  "six",
-  "seven",
-  "eight",
-  "nine",
-];
-
 function main() {
   return input
     .map((line) => line.match(/\d/g) ?? [])
