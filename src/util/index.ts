@@ -44,7 +44,7 @@ export function parseInput<T>({
     : splitted.map((...args) => mapper?.(...args) ?? Number(args[0]));
 }
 
-const genTemplate = (part: 1 | 2) => `import { parseInput } from '../util';
+const genTemplate = (part: 1 | 2) => `import { parseInput } from '../../util';
 
 const input = parseInput();
 
