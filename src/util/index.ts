@@ -1,7 +1,40 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
+
+type ChallengePartStructure = {
+  year: number;
+  day: number;
+  part: number;
+};
+
+export function getChallengePartStructure(): ChallengePartStructure {
+  const path = process.env
+    .npm_config_part!.split(".")
+    .map((number) => Number(number));
+
+  if (path.length !== 3) {
+    throw new Error(`The part must be of the format Year.Day.Part`);
+  }
+
+  return {
+    year: path[0],
+    day: path[1],
+    part: path[2],
+  };
+}
+
+export function getPathsForChallenge({
+  year,
+  day,
+  part,
+}: ChallengePartStructure): { directory: string; solution: string } {
+  return {
+    directory: `${year}/day${formatDay(day)}/`,
+    solution: `part${part}`,
+  };
+}
 
 export const formatDay = (day: number | string) =>
-  day.toString().padStart(2, '0');
+  day.toString().padStart(2, "0");
 
 /**
  * @typedef {Object} SplitOptions
@@ -27,16 +60,16 @@ export function parseInput<T>(options: { split: SplitOptions<T> }): T[];
 export function parseInput<T>({
   split,
 }: { split?: SplitOptions<T> | false } = {}) {
-  const input = readFileSync(
-    `./src/day${formatDay(process.env.npm_config_day!)}/input.txt`,
-    {
-      encoding: 'utf-8',
-    }
-  );
+  const structure = getChallengePartStructure();
+  const path = getPathsForChallenge(structure);
+
+  const input = readFileSync(`./src/${path.directory}input.txt`, {
+    encoding: "utf-8",
+  });
 
   if (split === false) return input;
 
-  const splitted = input.split(split?.delimiter ?? '\n');
+  const splitted = input.split(split?.delimiter ?? "\n");
   const mapper = split?.mapper;
 
   return mapper === false
@@ -51,10 +84,10 @@ const input = parseInput();
 // TODO: Complete Part ${part}
 `;
 
-export const setupDay = (day: number) => {
-  const dir = `./src/day${formatDay(day)}`;
+export const setupDay = (year: number, day: number) => {
+  const dir = `./src/${year}/day${formatDay(day)}`;
   mkdirSync(dir);
-  writeFileSync(`${dir}/input.txt`, '');
+  writeFileSync(`${dir}/input.txt`, "");
   writeFileSync(`${dir}/part1.ts`, genTemplate(1));
   writeFileSync(`${dir}/part2.ts`, genTemplate(2));
 };

@@ -1,24 +1,24 @@
-import { formatDay } from './util';
+import { getChallengePartStructure, getPathsForChallenge } from "./util";
 
-const day = Number(process.env.npm_config_day ?? 0);
-const part = Number(process.env.npm_config_part ?? 0);
+const partStructure = getChallengePartStructure();
 
-const outputSolution = (part: number) =>
+const outputSolution = () => {
+  const path = getPathsForChallenge(partStructure);
   console.log(
-    `Day ${day} | Part ${part} - Solution: ${
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require(`./day${formatDay(day)}/part${part}.js`).default
-    }`
+    `Year: ${partStructure.year} | Day ${partStructure.day} | Part ${
+      partStructure.part
+    } - Solution: ${require(`./${path.directory}${path.solution}.js`).default}`
   );
+};
 
-const validate = (type: 'day' | 'part', num: number, max: number) => {
+const validate = (type: "year" | "day" | "part", num: number, max: number) => {
   if (num < 1 || num > max + 1)
     throw new Error(
       `The ${type} must be number between 1 and ${max}, you entered ${num}`
     );
 };
 
-validate('day', day, 25);
-validate('part', part, 2);
-
-outputSolution(part);
+validate("year", partStructure.year, 2023);
+validate("day", partStructure.day, 25);
+validate("part", partStructure.part, 2);
+outputSolution();
