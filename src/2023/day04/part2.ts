@@ -4,9 +4,6 @@ class Card {
   winningNumbers: number[];
   visibleNumbers: number[];
 
-  additionalCards: Card[] = [];
-  count = 1;
-
   constructor(winningNumbers: number[], visibleNumbers: number[]) {
     this.winningNumbers = winningNumbers;
     this.visibleNumbers = visibleNumbers;
@@ -16,10 +13,6 @@ class Card {
     return this.visibleNumbers.filter((number) =>
       this.winningNumbers.includes(number)
     );
-  }
-
-  copy(): Card {
-    return new Card(this.winningNumbers, this.visibleNumbers);
   }
 }
 
