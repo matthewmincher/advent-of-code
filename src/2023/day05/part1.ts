@@ -6,6 +6,7 @@ class Node<T> {
 
   constructor(public data: T) {}
 }
+
 class LinkedList<T> {
   private head: Node<T> | null = null;
 
@@ -39,37 +40,6 @@ class LinkedList<T> {
 
     return recurse(this.head);
   }
-
-  public find(comparator: (data: T) => boolean): Node<T> | null {
-    const recurse = (node: Node<T>): Node<T> | null => {
-      if (comparator(node.data)) {
-        return node;
-      }
-
-      return node.next ? recurse(node.next) : null;
-    };
-
-    return this.head ? recurse(this.head) : null;
-  }
-
-  public all(): T[] {
-    if (!this.head) {
-      return [];
-    }
-
-    const allItems: T[] = [];
-    const recurse = (node: Node<T>): T[] => {
-      allItems.push(node.data);
-
-      return node.next ? recurse(node.next) : allItems;
-    };
-
-    return recurse(this.head);
-  }
-
-  public length(): number {
-    return this.all().length;
-  }
 }
 
 const input = parseInput<string>({
@@ -78,17 +48,15 @@ const input = parseInput<string>({
   },
 }).filter(Boolean);
 
-const mapOrder = [
-  "seed",
-  "soil",
-  "fertilizer",
-  "water",
-  "light",
-  "temperature",
-  "humidity",
-  "location",
-] as const;
-type StepName = (typeof mapOrder)[number];
+type StepName =
+  | "seed"
+  | "soil"
+  | "fertilizer"
+  | "water"
+  | "light"
+  | "temperature"
+  | "humidity"
+  | "location";
 type StepRange = {
   source: number;
   destination: number;
@@ -161,12 +129,10 @@ function traverseToEnd(node: Node<StepMap>, sourceNumber: number): number {
 
 function main() {
   const locations = seeds.map((seedNumber) => {
-    return [seedNumber, traverseToEnd(maps.first()!, seedNumber)];
+    return traverseToEnd(maps.first()!, seedNumber);
   });
 
-  return locations.sort((a, b) => {
-    return a[1] - b[1];
-  })[0][1];
+  return locations.sort((a, b) => a - b).at(0);
 }
 
 export default main();

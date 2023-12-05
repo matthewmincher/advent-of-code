@@ -6,6 +6,7 @@ class Node<T> {
 
   constructor(public data: T) {}
 }
+
 class LinkedList<T> {
   private head: Node<T> | null = null;
 
@@ -39,37 +40,6 @@ class LinkedList<T> {
 
     return recurse(this.head);
   }
-
-  public find(comparator: (data: T) => boolean): Node<T> | null {
-    const recurse = (node: Node<T>): Node<T> | null => {
-      if (comparator(node.data)) {
-        return node;
-      }
-
-      return node.next ? recurse(node.next) : null;
-    };
-
-    return this.head ? recurse(this.head) : null;
-  }
-
-  public all(): T[] {
-    if (!this.head) {
-      return [];
-    }
-
-    const allItems: T[] = [];
-    const recurse = (node: Node<T>): T[] => {
-      allItems.push(node.data);
-
-      return node.next ? recurse(node.next) : allItems;
-    };
-
-    return recurse(this.head);
-  }
-
-  public length(): number {
-    return this.all().length;
-  }
 }
 
 const input = parseInput<string>({
@@ -78,17 +48,15 @@ const input = parseInput<string>({
   },
 }).filter(Boolean);
 
-const mapOrder = [
-  "seed",
-  "soil",
-  "fertilizer",
-  "water",
-  "light",
-  "temperature",
-  "humidity",
-  "location",
-] as const;
-type StepName = (typeof mapOrder)[number];
+type StepName =
+  | "seed"
+  | "soil"
+  | "fertilizer"
+  | "water"
+  | "light"
+  | "temperature"
+  | "humidity"
+  | "location";
 type StepRange = {
   source: number;
   destination: number;
@@ -105,7 +73,6 @@ const seedInput = input.shift()!.replace("seeds: ", "").split(" ").map(Number);
 const seedRanges = seedInput.flatMap((_value, index, array) =>
   index % 2 ? [] : [array.slice(index, index + 2)]
 );
-console.log(seedRanges);
 
 const maps: LinkedList<StepMap> = new LinkedList();
 
