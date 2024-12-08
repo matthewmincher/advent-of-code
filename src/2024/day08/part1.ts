@@ -1,5 +1,4 @@
 import { parseInput } from "../../util";
-import { domainToASCII } from "node:url";
 
 const input = parseInput<string[]>({
   split: {
@@ -29,9 +28,10 @@ const findPossibleLocations = (
         continue;
       }
 
-      const delta = [targetRow - row, targetCol - col];
+      const deltaY = targetRow - row;
+      const deltaX = targetCol - col;
 
-      possibilities.push([targetRow + delta[0], targetCol + delta[1]]);
+      possibilities.push([targetRow + deltaY, targetCol + deltaX]);
     }
   }
 
